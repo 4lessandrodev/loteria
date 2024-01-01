@@ -29,6 +29,7 @@ export default class Loteria {
     }
 
     public sortear(sorteio: number[]): Loteria {
+        if(!this.jogos.length) throw new Error('Não existem jogos. Add jogos antes de sortear.')
         this.jogos = this.jogos.map((jogo) => jogo.conferir(sorteio));
         return this;
     }
