@@ -25,7 +25,7 @@ Exemplo de Resultado
 Após a execução do programa, será gerada uma saída no console mostrando os acertos de cada jogador, como o exemplo abaixo:
 
 ```json
-Copy code
+
 {
     "awndfyqdh": {
         "numerosDoJogo": "6,10,18,23,26,32,48",
