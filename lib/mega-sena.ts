@@ -1,10 +1,10 @@
 const uuid = (id?: string) => {
-    if(id) return id;
+    if (id) return id;
     const chars = 'qwertyuiopasdfghjklzxcvbnm';
     let uid = '';
-    while(uid.length < 9) {
+    while (uid.length < 9) {
         const index = Math.trunc(Math.random() * chars.length);
-        uid = uid + chars[index] 
+        uid = uid + chars[index]
     };
     return uid;
 }
@@ -21,16 +21,19 @@ export default class MegaSena {
     private readonly numerosMarcados: number[] = [];
     private limiteNumeros: number = 6;
     private nomeCotista: string = 'Anônimo';
-    private cotistaPagou: boolean = false;
+    private cotistaPagou: boolean = true;
     private acertos: number[] = [];
 
-    constructor(props?: Props){
+    constructor(props?: Props) {
         this.id = uuid();
         this.limiteNumeros = props?.limiteNumeros ?? 6;
         this.nomeCotista = props?.nomeCotista ?? 'Anônimo';
         this.numerosMarcados = props?.numerosMarcados ?? [];
         this.cotistaPagou = props?.cotistaPagou ?? false;
         this.acertos = [];
+        this.numerosMarcados = this.numerosMarcados.filter((n, i, arr) => i === arr.indexOf(n));
+        if (this.numerosMarcados.length < 6) throw new Error('Qtd. números marcados devem ser maior que 5')
+        if (this.numerosMarcados.length > this.limiteNumeros) throw new Error('Qtd. números marcados excedem o limite.');
     }
 
     private numeroValido(numero: number): boolean {
@@ -42,8 +45,9 @@ export default class MegaSena {
     }
 
     public marcarNumero(numero: number): MegaSena {
-        if(!this.numeroValido(numero)) throw new Error(`${numero} é um número inválido`);
-        if(!this.podeMarcarMaisUm()) throw new Error('a quantidade máxima de números excedida');
+        if(this.numerosMarcados.includes(numero)) throw new Error(`${numero} já foi marcado.`);
+        if (!this.numeroValido(numero)) throw new Error(`${numero} é um número inválido`);
+        if (!this.podeMarcarMaisUm()) throw new Error('a quantidade máxima de números excedida');
         this.numerosMarcados.push(numero);
         return this;
     }
@@ -80,7 +84,7 @@ export default class MegaSena {
         this.acertos = [];
         resultado.forEach((n) => {
             const acertou = this.numerosMarcados.includes(n);
-            if(acertou) this.acertos.push(n);
+            if (acertou) this.acertos.push(n);
         });
         return this;
     }
